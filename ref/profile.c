@@ -27,6 +27,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <mpi.h>
+#include <stdlib.h>
 
 #include "block.h"
 #include "comm.h"
@@ -470,7 +471,10 @@ void profile(void)
       }
 
       if (report_perf & 2) {
-         fp = fopen("results.txt", "w");
+         chat tadashi_buffer[2000];
+         char *TADASHI_BINARY = getenv("TADASHI_BINARY");
+         sprintf(tadashi_buffer, "results-%s.txt", TADASHI_BINARY ? TADASHI_BINARY : "");
+         fp = fopen(tadashi_buffer, "w");
 
          fprintf(fp, "\n ================ Start report ===================\n\n");
          fprintf(fp, "          Mantevo miniAMR\n");
