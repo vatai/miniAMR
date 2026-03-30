@@ -44,6 +44,7 @@ void stencil_check(int);
 void stencil_driver(int var, int cacl_stage)
 {
    if (stencil)
+#pragma scop // [0] //////////////////
       stencil_calc(var, stencil);
    else {
       if (!var)
@@ -72,6 +73,8 @@ void stencil_driver(int var, int cacl_stage)
          stencil_check(var);
       } else
          stencil_calc(var, 7);
+
+#pragma endscop // [0] //////////////////
    }
 }
 
@@ -84,6 +87,7 @@ void stencil_calc(int var, int stencil_in)
       #pragma omp parallel for shared(sorted_index, num_refine, blocks, sorted_list, x_block_size, y_block_size, z_block_size)
       for(int in = 0; in < sorted_index[num_refine+1]; in++) {
          block* bp = &blocks[sorted_list[in].n];
+#pragma scop // [1] //////////////////
          double work[x_block_size+2][y_block_size+2][z_block_size+2];
          for (i = 1; i <= x_block_size; i++)
             for (j = 1; j <= y_block_size; j++)
@@ -99,6 +103,8 @@ void stencil_calc(int var, int stencil_in)
             for (j = 1; j <= y_block_size; j++)
                for (k = 1; k <= z_block_size; k++)
                   bp->array[var][i][j][k] = work[i][j][k];
+
+#pragma endscop // [1] //////////////////
       }
       total_fp_divs += (double) num_active*num_cells;
       total_fp_adds += (double) 6*num_active*num_cells;
@@ -159,12 +165,15 @@ void stencil_0(int var)
       //#pragma omp parallel for default(shared) private(i, j, k, bp, v)
       for (in = 0; in < sorted_index[num_refine+1]; in++) {
          bp = &blocks[sorted_list[in].n];
+#pragma scop // [2] //////////////////
          for (i = 1; i <= x_block_size; i++)
             for (j = 1; j <= y_block_size; j++)
                for (k = 1; k <= z_block_size; k++)
                   for (v = mat; v < 2*mat; v++)
                      bp->array[var][i][j][k] += bp->array[v][i][j][k]*
                                                 bp->array[0][i][j][k];
+
+#pragma endscop // [2] //////////////////
       }
       total_fp_adds += (double) mat*num_active*num_cells;
       total_fp_muls += (double) mat*num_active*num_cells;
@@ -246,6 +255,7 @@ void stencil_x(int var)
       //#pragma omp parallel for default(shared) private(i, j, k, bp, v)
       for (in = 0; in < sorted_index[num_refine+1]; in++) {
          bp = &blocks[sorted_list[in].n];
+#pragma scop // [3] //////////////////
          for (i = 1; i <= x_block_size; i++)
             for (j = 1; j <= y_block_size; j++)
                for (k = 1; k <= z_block_size; k++) {
@@ -254,6 +264,8 @@ void stencil_x(int var)
                                               bp->array[0][i][j][k];
                   bp->array[1][i][j][k] /= (a1 + bp->array[1][i][j][k]);
                }
+#pragma endscop // [3] //////////////////
+
       }
       total_fp_adds += (double) (mat+1)*num_active*num_cells;
       total_fp_muls += (double) mat*num_active*num_cells;
@@ -396,6 +408,7 @@ void stencil_y(int var)
       {
       for (in = 0; in < sorted_index[num_refine+1]; in++) {
          bp = &blocks[sorted_list[in].n];
+#pragma scop // [4] //////////////////
          for (i = 1; i <= x_block_size; i++)
             for (j = 1; j <= y_block_size; j++)
                for (k = 1; k <= z_block_size; k++) {
@@ -404,6 +417,8 @@ void stencil_y(int var)
                                               bp->array[0][i][j][k];
                   bp->array[1][i][j][k] /= (a1 + bp->array[1][i][j][k]);
                }
+#pragma endscop // [4] //////////////////
+
       }
       }
       total_fp_adds += (double) (mat+1)*num_active*num_cells;
@@ -547,6 +562,7 @@ void stencil_z(int var)
       //#pragma omp parallel for default(shared) private(i, j, k, bp, v, tmp1, tmp2)
       for (in = 0; in < sorted_index[num_refine+1]; in++) {
          bp = &blocks[sorted_list[in].n];
+#pragma scop // [5] //////////////////
          for (i = 1; i <= x_block_size; i++)
             for (j = 1; j <= y_block_size; j++)
                for (k = 1; k <= z_block_size; k++) {
@@ -555,6 +571,8 @@ void stencil_z(int var)
                                               bp->array[0][i][j][k];
                   bp->array[1][i][j][k] /= (a1 + bp->array[1][i][j][k]);
                }
+#pragma endscop // [5] //////////////////
+
       }
       total_fp_adds += (double) (mat+1)*num_active*num_cells;
       total_fp_muls += (double) mat*num_active*num_cells;
@@ -696,6 +714,7 @@ void stencil_7(int var)
       //#pragma omp parallel for default(shared) private(i, j, k, bp, v)
       for (in = 0; in < sorted_index[num_refine+1]; in++) {
          bp = &blocks[sorted_list[in].n];
+#pragma scop // [6] //////////////////
          for (i = 1; i <= x_block_size; i++)
             for (j = 1; j <= y_block_size; j++)
                for (k = 1; k <= z_block_size; k++)
@@ -718,6 +737,8 @@ void stencil_7(int var)
             for (j = 1; j <= y_block_size; j++)
                for (k = 1; k <= z_block_size; k++)
                   bp->array[var][i][j][k] = work[i][j][k];
+
+#pragma endscop // [6] //////////////////
       }
       total_fp_adds += (double) 7*num_active*num_cells;
       total_fp_muls += (double) 8*num_active*num_cells;
@@ -825,6 +846,7 @@ void stencil_27(int var)
       //#pragma omp parallel for default(shared) private(i, j, k, bp, v)
       for (in = 0; in < sorted_index[num_refine+1]; in++) {
          bp = &blocks[sorted_list[in].n];
+#pragma scop // [7] //////////////////
          for (i = 1; i <= x_block_size; i++)
             for (j = 1; j <= y_block_size; j++)
                for (k = 1; k <= z_block_size; k++)
@@ -860,6 +882,8 @@ void stencil_27(int var)
             for (j = 1; j <= y_block_size; j++)
                for (k = 1; k <= z_block_size; k++)
                   bp->array[var][i][j][k] = work[i][j][k];
+
+#pragma endscop // [7] //////////////////
       }
       total_fp_adds += (double) 27*num_active*num_cells;
       total_fp_divs += (double) num_active*num_cells;
@@ -1000,6 +1024,7 @@ void stencil_check(int var)
    //#pragma omp parallel for default(shared) private(i, j, k, bp, v)
    for (in = 0; in < sorted_index[num_refine+1]; in++) {
       bp = &blocks[sorted_list[in].n];
+#pragma scop // [8] //////////////////
       for (i = 1; i <= x_block_size; i++)
          for (j = 1; j <= y_block_size; j++)
             for (k = 1; k <= z_block_size; k++) {
@@ -1016,5 +1041,7 @@ void stencil_check(int var)
                   total_fp_adds += (double) 1;
                }
             }
+#pragma endscop // [8] //////////////////
+
    }
 }

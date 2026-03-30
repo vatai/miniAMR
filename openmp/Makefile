@@ -6,10 +6,11 @@ LDFLAGS =
 LDLIBS = -lm -lgomp
 
 EXEC = miniAMR.x
+STENCIL = stencil
 
 OBJS = block.o check_sum.o comm_block.o comm.o comm_parent.o comm_refine.o \
        comm_util.o driver.o init.o main.o move.o pack.o plot.o profile.o \
-       rcb.o refine.o sfc.o stencil.o util.o
+       rcb.o refine.o sfc.o $(STENCIL).o util.o
 
 $(EXEC): $(OBJS)
 	$(LD) $(LDFLAGS) -o $@ $(OBJS) $(LDLIBS)
@@ -56,6 +57,6 @@ refine.o: block.h comm.h proto.h timer.h
 
 sfc.o: block.h comm.h proto.h timer.h
 
-stencil.o: block.h comm.h proto.h
+$(STENCIL).o: block.h comm.h proto.h
 
 util.o: block.h comm.h proto.h timer.h
