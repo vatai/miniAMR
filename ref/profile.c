@@ -471,7 +471,7 @@ void profile(void)
       }
 
       if (report_perf & 2) {
-         chat tadashi_buffer[2000];
+         char tadashi_buffer[2000];
          char *TADASHI_BINARY = getenv("TADASHI_BINARY");
          sprintf(tadashi_buffer, "results-%s.txt", TADASHI_BINARY ? TADASHI_BINARY : "");
          fp = fopen(tadashi_buffer, "w");
