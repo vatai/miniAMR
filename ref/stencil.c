@@ -157,7 +157,7 @@ void stencil_0(int var)
    if (var == 1) {
       for (in = 0; in < sorted_index[num_refine+1]; in++) {
          bp = &blocks[sorted_list[in].n];
-         printf("@@@ scop [2] @@@\n");
+         // printf("@@@ scop [2] @@@\n");
 #pragma scop // [2] //////////////////
          for (i = 1; i <= x_block_size; i++)
             for (j = 1; j <= y_block_size; j++)
@@ -243,7 +243,7 @@ void stencil_x(int var)
    if (var == 1) {
       for (in = 0; in < sorted_index[num_refine+1]; in++) {
          bp = &blocks[sorted_list[in].n];
-         printf("@@@ scop [3] @@@\n");
+         // printf("@@@ scop [3] @@@\n");
 #pragma scop // [3] //////////////////
          for (i = 1; i <= x_block_size; i++)
             for (j = 1; j <= y_block_size; j++)
@@ -391,7 +391,7 @@ void stencil_y(int var)
    if (var == 1) {
       for (in = 0; in < sorted_index[num_refine+1]; in++) {
          bp = &blocks[sorted_list[in].n];
-         printf("@@@ scop [4] @@@\n");
+         // printf("@@@ scop [4] @@@\n");
 #pragma scop // [4] //////////////////
          for (i = 1; i <= x_block_size; i++)
             for (j = 1; j <= y_block_size; j++)
@@ -540,7 +540,7 @@ void stencil_z(int var)
    if (var == 1) {
       for (in = 0; in < sorted_index[num_refine+1]; in++) {
          bp = &blocks[sorted_list[in].n];
-         printf("@@@ scop [5] @@@\n");
+         // printf("@@@ scop [5] @@@\n");
 #pragma scop // [5] //////////////////
          for (i = 1; i <= x_block_size; i++)
             for (j = 1; j <= y_block_size; j++)
@@ -688,7 +688,7 @@ void stencil_7(int var)
    if (var < mat) {
       for (in = 0; in < sorted_index[num_refine+1]; in++) {
          bp = &blocks[sorted_list[in].n];
-         printf("@@@ scop [6] @@@\n");
+         // printf("@@@ scop [6] @@@\n");
 #pragma scop // [6] //////////////////
          for (i = 1; i <= x_block_size; i++)
             for (j = 1; j <= y_block_size; j++)
@@ -817,7 +817,7 @@ void stencil_27(int var)
    if (var < mat) {
       for (in = 0; in < sorted_index[num_refine+1]; in++) {
          bp = &blocks[sorted_list[in].n];
-         printf("@@@ scop [7] @@@\n");
+         // printf("@@@ scop [7] @@@\n");
 #pragma scop // [7] //////////////////
          for (i = 1; i <= x_block_size; i++)
             for (j = 1; j <= y_block_size; j++)
