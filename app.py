@@ -11,7 +11,7 @@ from tadashi import TrEnum
 from tadashi.apps import App
 from tadashi.translators import Translator
 
-BASE_PATH = Path(__file__).parent / "miniAMR/ref"
+BASE_PATH = Path(__file__).parent / "ref"
 
 ml4tadashi = os.path.dirname(__file__)
 ml4tadashi = os.path.dirname(ml4tadashi)
@@ -57,7 +57,7 @@ class miniAMR(App):
         compiler = "mpicc"
         if not which(compiler):
             return []
-        cmds = [compiler, "-compile_info"]
+        cmd = [compiler, "-compile_info"]
         result = run(cmd, stdout=PIPE, stderr=DEVNULL, check=False)
         if result.returncode == 1:
             return []
@@ -157,7 +157,7 @@ def main():
     npz, npx = 1, 1
     kwargs = {
         "num_ranks": npz * npx,
-        "run_args": ["--nx", "10", "--ny", "10", "--nz", "82"]
+        "run_args": ["--nx", "20", "--ny", "20", "--nz", "82"]
         + ["--npz", str(npz), "--npx", str(npx)],
         "translator": "Pet",
     }
