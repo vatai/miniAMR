@@ -153,67 +153,6 @@ class miniAMR(App):
         raise Exception("No output found")
 
 
-def main2():
-    scop_idx = 0
-    app = miniAMR(
-        num_ranks=6,
-        run_args=["--nx", "10", "--ny", "10", "--nz", "82", "--npz", "3", "--npx", "2"],
-        # run_args=["--nx", "10", "--ny", "10", "--nz", "80", "--npz", "3", "--npx", "2"],
-    )
-
-    # node = app.scops[scop_idx].schedule_tree[0]
-    # print(node.yaml_str)
-
-    node = app.scops[scop_idx].schedule_tree[16]
-    tr = [
-        [16, TrEnum.FULL_SPLIT],
-        [20, TrEnum.INTERCHANGE],
-        [15, TrEnum.FULL_FUSE],
-        [11, TrEnum.FULL_SPLIT],
-        [10, TrEnum.FULL_FUSE],
-        [6, TrEnum.FULL_SPLIT],
-        [17, TrEnum.FULL_SPLIT],
-        # [5, TrEnum.FULL_FUSE],
-    ]
-    app.scops[scop_idx].transform_list(tr)
-    print(f"{app.legal=}")
-    if not app.legal:
-        return
-    for i, node in enumerate(app.scops[scop_idx].schedule_tree):
-        at = node.available_transformations
-        if at:
-            print(f"{i} {at}")
-    # return
-
-    repeat = 10
-    app.compile()
-    orig_time = app.measure(repeat)
-    for ts in [61]:
-        # tr = [
-        #        [16, TrEnum.FULL_SPLIT],
-        #        [20, TrEnum.INTERCHANGE],
-        #        [15, TrEnum.FULL_FUSE],
-        #        [11, TrEnum.FULL_SPLIT],
-        #        [10, TrEnum.FULL_FUSE],
-        #        [6, TrEnum.FULL_SPLIT],
-        #        ]
-        app.scops[scop_idx].reset()
-        app.scops[scop_idx].transform_list(tr)
-        print(f"{app.legal=}")
-        if not app.legal:
-            continue
-        tapp = app.generate_code(f"{ts=}.c", ephemeral=False)
-        tapp.compile()
-        tr_time = tapp.measure(repeat)
-        speedup = orig_time / tr_time
-        print(f"{ts=}")
-        print(f"{orig_time=}")
-        print(f"{tr_time=}")
-        print(f"{speedup=}")
-
-    print("done")
-
-
 def main():
     npz, npx = 1, 1
     kwargs = {
