@@ -11,8 +11,6 @@ from tadashi import TrEnum
 from tadashi.apps import App
 from tadashi.translators import Translator
 
-BASE_PATH = Path(__file__).parent / "ref"
-
 ml4tadashi = os.path.dirname(__file__)
 ml4tadashi = os.path.dirname(ml4tadashi)
 ml4tadashi = os.path.dirname(ml4tadashi)
@@ -22,6 +20,8 @@ ml4tadashi = os.path.join(ml4tadashi, "ML4TADASHI")
 sys.path.append(ml4tadashi)
 
 import ML4TADASHI
+
+BASE_PATH = Path(__file__).parent / "ref"
 
 
 class miniAMR(App):
@@ -129,9 +129,9 @@ class miniAMR(App):
 
     def run_cmd(self) -> list[str]:
         cmd = [
-            "mpirun",
-            "-N",
-            str(self.num_ranks),
+            # "mpirun",
+            # "-N",
+            # str(self.num_ranks),
             str(self.output_binary),
             "--stencil",
             "0",
@@ -157,7 +157,7 @@ def main():
     npz, npx = 1, 1
     kwargs = {
         "num_ranks": npz * npx,
-        "run_args": ["--nx", "20", "--ny", "20", "--nz", "82"]
+        "run_args": ["--nx", "10", "--ny", "10", "--nz", "82"]
         + ["--npz", str(npz), "--npx", str(npx)],
         "translator": "Pet",
     }
